@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Ella's Morning ☀️</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: 'Nunito', 'Helvetica Neue', Arial, sans-serif;
+      background: #FFF9E6;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      height: 100dvh;
+    }
+
+    /* ── Header ─────────────────────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, #FF6B9D 0%, #9B59B6 100%);
+      padding: 18px 70px 14px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(155, 89, 182, 0.35);
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .header h1 {
+      color: white;
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      font-weight: 900;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+      line-height: 1.1;
+    }
+
+    .header .day-display {
+      color: #FFE566;
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      font-weight: 900;
+      line-height: 1.15;
+    }
+
+    .header .date-display {
+      color: rgba(255,255,255,0.92);
+      font-size: clamp(1rem, 3vw, 1.3rem);
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .stars-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: rgba(255,255,255,0.22);
+      border-radius: 20px;
+      padding: 6px 14px;
+      color: white;
+      font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+      font-weight: 800;
+    }
+
+    .settings-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(255,255,255,0.22);
+      border: none;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      font-size: 1.4rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .settings-btn:active { background: rgba(255,255,255,0.4); }
+
+    /* ── Progress section ───────────────────────────────────── */
+    .progress-section {
+      padding: 14px 20px 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .progress-bar-wrap {
+      flex: 1;
+      background: #E0E0E0;
+      border-radius: 20px;
+      height: 22px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #4CAF50, #8BC34A);
+      border-radius: 20px;
+      transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .progress-text {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #555;
+      white-space: nowrap;
+    }
+
+    .today-stars {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #FF9800;
+      white-space: nowrap;
+    }
+
+    .motivation-msg {
+      text-align: center;
+      font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+      font-weight: 700;
+      color: #888;
+      padding: 0 20px 8px;
+      flex-shrink: 0;
+    }
+
+    /* ── Task list ───────────────────────────────────────────── */
+    .task-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 4px 14px 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .task-card {
+      display: flex;
+      align-items: center;
+      background: white;
+      border-radius: 22px;
+      padding: 15px 18px;
+      margin-bottom: 9px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+      cursor: pointer;
+      border-left: 8px solid var(--tc);
+      user-select: none;
+      -webkit-user-select: none;
+      transition: transform 0.12s, box-shadow 0.12s, opacity 0.3s;
+      touch-action: manipulation;
+    }
+
+    .task-card:active {
+      transform: scale(0.97);
+      box-shadow: 0 1px 5px rgba(0,0,0,0.07);
+    }
+
+    .task-card.completed {
+      background: #F1FFF4;
+      border-left-color: #4CAF50 !important;
+      opacity: 0.8;
+    }
+
+    .task-card.pop {
+      animation: pop 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes pop {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.07); }
+      100% { transform: scale(1); }
+    }
+
+    .task-emoji {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      margin-right: 14px;
+      min-width: 40px;
+      text-align: center;
+      line-height: 1;
+    }
+
+    .task-name {
+      flex: 1;
+      font-size: clamp(1.1rem, 3vw, 1.45rem);
+      font-weight: 800;
+      color: #333;
+      line-height: 1.2;
+    }
+
+    .task-card.completed .task-name {
+      text-decoration: line-through;
+      color: #999;
+    }
+
+    .task-check {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 3px solid #DDD;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: 900;
+      flex-shrink: 0;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      color: transparent;
+    }
+
+    .task-card.completed .task-check {
+      background: #4CAF50;
+      border-color: #4CAF50;
+      color: white;
+    }
+
+    /* ── Off-day screens ─────────────────────────────────────── */
+    .offday-screen {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 30px;
+    }
+
+    .offday-screen.active { display: flex; }
+
+    .offday-emoji {
+      font-size: clamp(4rem, 15vw, 7rem);
+      margin-bottom: 20px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-14px); }
+    }
+
+    .offday-title {
+      font-size: clamp(1.8rem, 6vw, 2.8rem);
+      font-weight: 900;
+      color: #9B59B6;
+      margin-bottom: 10px;
+    }
+
+    .offday-subtitle {
+      font-size: clamp(1.1rem, 3.5vw, 1.5rem);
+      font-weight: 700;
+      color: #777;
+      line-height: 1.4;
+    }
+
+    /* ── Celebration overlay ─────────────────────────────────── */
+    .celebration-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.93);
+      z-index: 90;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 30px;
+    }
+
+    .celebration-overlay.active { display: flex; }
+
+    .cel-emoji {
+      font-size: clamp(4rem, 14vw, 7rem);
+      animation: spinIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes spinIn {
+      from { transform: scale(0) rotate(-180deg); opacity: 0; }
+      to   { transform: scale(1) rotate(0deg);   opacity: 1; }
+    }
+
+    .cel-title {
+      font-size: clamp(2rem, 7vw, 3.2rem);
+      font-weight: 900;
+      color: #FF6B9D;
+      margin: 18px 0 8px;
+      text-shadow: 2px 3px 0 rgba(255,107,157,0.18);
+    }
+
+    .cel-subtitle {
+      font-size: clamp(1.2rem, 4vw, 1.6rem);
+      font-weight: 700;
+      color: #9B59B6;
+      margin-bottom: 14px;
+    }
+
+    .cel-stars {
+      font-size: clamp(1.3rem, 4vw, 1.8rem);
+      font-weight: 900;
+      color: #FF9800;
+      margin-bottom: 30px;
+    }
+
+    .dismiss-btn {
+      background: linear-gradient(135deg, #FF6B9D, #9B59B6);
+      color: white;
+      border: none;
+      border-radius: 32px;
+      padding: 18px 52px;
+      font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+      font-weight: 800;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 6px 22px rgba(155, 89, 182, 0.4);
+      transition: transform 0.15s;
+    }
+
+    .dismiss-btn:active { transform: scale(0.95); }
+
+    /* ── Canvas (confetti) ───────────────────────────────────── */
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 89;
+    }
+
+    /* ── Modal base ──────────────────────────────────────────── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 200;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal {
+      background: white;
+      border-radius: 28px 28px 0 0;
+      padding: 28px 24px 40px;
+      width: 100%;
+      max-width: 640px;
+      max-height: 88vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .modal-handle {
+      width: 42px;
+      height: 5px;
+      background: #DDD;
+      border-radius: 3px;
+      margin: 0 auto 22px;
+    }
+
+    .modal h2 {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #333;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* ── PIN modal ───────────────────────────────────────────── */
+    .pin-dots {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 14px 0 24px;
+    }
+
+    .pin-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 3px solid #DDD;
+      transition: all 0.15s;
+    }
+
+    .pin-dot.filled {
+      background: #9B59B6;
+      border-color: #9B59B6;
+    }
+
+    .pin-keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    .pin-key {
+      background: #F5F5F5;
+      border: none;
+      border-radius: 18px;
+      padding: 20px;
+      font-size: 1.8rem;
+      font-weight: 800;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.12s, transform 0.1s;
+      touch-action: manipulation;
+    }
+
+    .pin-key:active {
+      background: #E0E0E0;
+      transform: scale(0.92);
+    }
+
+    .pin-key.clear-btn { background: #FFF0F0; }
+    .pin-key.back-btn  { background: #F0F0FF; }
+
+    .pin-error {
+      text-align: center;
+      color: #E53935;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-top: 14px;
+      min-height: 22px;
+    }
+
+    .pin-hint {
+      text-align: center;
+      color: #BBB;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    /* ── Parent panel ────────────────────────────────────────── */
+    .panel-section {
+      margin-bottom: 22px;
+    }
+
+    .panel-section-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #AAA;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      padding-left: 4px;
+    }
+
+    .panel-btn {
+      width: 100%;
+      background: #F7F7F7;
+      border: none;
+      border-radius: 16px;
+      padding: 16px 18px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      color: #333;
+      transition: background 0.12s;
+      touch-action: manipulation;
+    }
+
+    .panel-btn:active { background: #EBEBEB; }
+    .panel-btn.danger  { background: #FFF2F2; color: #D32F2F; }
+    .panel-btn.success { background: #F2FFF5; color: #2E7D32; }
+    .panel-btn .btn-icon { font-size: 1.2rem; }
+
+    .task-edit-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .task-edit-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #F9F9F9;
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+
+    .edit-emoji { font-size: 1.4rem; cursor: pointer; }
+
+    .edit-name-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #333;
+      outline: none;
+      min-width: 0;
+    }
+
+    .delete-task-btn {
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 4px 6px;
+      flex-shrink: 0;
+    }
+
+    .add-task-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .add-task-input {
+      flex: 1;
+      border: 2.5px solid #E0E0E0;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      outline: none;
+      color: #333;
+      transition: border-color 0.2s;
+    }
+
+    .add-task-input:focus { border-color: #9B59B6; }
+
+    .add-task-submit {
+      background: #9B59B6;
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 12px 20px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .close-panel-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #FF6B9D, #9B59B6);
+      color: white;
+      border: none;
+      border-radius: 18px;
+      padding: 18px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      font-family: inherit;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    .close-panel-btn:active { opacity: 0.88; }
+
+    .stat-row {
+      background: #F7F7F7;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #555;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .stat-value { color: #FF9800; font-size: 1.1rem; }
+
+    /* ── Change-PIN modal ────────────────────────────────────── */
+    .change-pin-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 300;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .change-pin-modal.active { display: flex; }
+
+    .change-pin-modal .modal {
+      border-radius: 28px 28px 0 0;
+    }
+
+    .change-pin-step { display: none; }
+    .change-pin-step.active { display: block; }
+  </style>
+</head>
+<body>
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- ── Header ────────────────────────────────────────────── -->
+  <header class="header">
+    <div class="stars-badge" id="total-stars-badge">⭐ 0</div>
+    <h1>Ella's Morning ☀️</h1>
+    <div class="day-display" id="day-display">Wednesday</div>
+    <div class="date-display" id="date-display">25th March 2026</div>
+    <button class="settings-btn" id="settings-btn" aria-label="Parent Settings">⚙️</button>
+  </header>
+
+  <!-- ── Weekend screen ────────────────────────────────────── -->
+  <div class="offday-screen" id="weekend-screen">
+    <div class="offday-emoji">🌈</div>
+    <div class="offday-title">Weekend! 🎉</div>
+    <div class="offday-subtitle">No school today, Ella —<br>enjoy your day! 💕</div>
+  </div>
+
+  <!-- ── Skipped screen ────────────────────────────────────── -->
+  <div class="offday-screen" id="skipped-screen">
+    <div class="offday-emoji">🌟</div>
+    <div class="offday-title">Day Off!</div>
+    <div class="offday-subtitle">Have a wonderful day, Ella! 💕</div>
+  </div>
+
+  <!-- ── Main checklist ────────────────────────────────────── -->
+  <div id="main-content" style="display:none; flex:1; display:flex; flex-direction:column; min-height:0;">
+    <div class="progress-section">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <div class="progress-text" id="progress-text">0/14</div>
+      <div class="today-stars">⭐ <span id="today-stars">0</span></div>
+    </div>
+    <div class="motivation-msg" id="motivation-msg">Time to get started! 💪</div>
+    <div class="task-list" id="task-list"></div>
+  </div>
+
+  <!-- ── Celebration overlay ───────────────────────────────── -->
+  <div class="celebration-overlay" id="celebration-overlay">
+    <div class="cel-emoji">🎊</div>
+    <div class="cel-title">Amazing, Ella! 🌟</div>
+    <div class="cel-subtitle">You've done EVERYTHING!</div>
+    <div class="cel-stars" id="cel-stars">You earned ⭐ 14 stars today!</div>
+    <button class="dismiss-btn" id="dismiss-btn">Let's go! 🚀</button>
+  </div>
+
+  <!-- ── PIN modal ─────────────────────────────────────────── -->
+  <div class="modal-overlay" id="pin-modal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <h2>🔐 Parent Mode</h2>
+      <div class="pin-dots">
+        <div class="pin-dot" id="d0"></div>
+        <div class="pin-dot" id="d1"></div>
+        <div class="pin-dot" id="d2"></div>
+        <div class="pin-dot" id="d3"></div>
+      </div>
+      <div class="pin-keypad">
+        <button class="pin-key" data-k="1">1</button>
+        <button class="pin-key" data-k="2">2</button>
+        <button class="pin-key" data-k="3">3</button>
+        <button class="pin-key" data-k="4">4</button>
+        <button class="pin-key" data-k="5">5</button>
+        <button class="pin-key" data-k="6">6</button>
+        <button class="pin-key" data-k="7">7</button>
+        <button class="pin-key" data-k="8">8</button>
+        <button class="pin-key" data-k="9">9</button>
+        <button class="pin-key clear-btn" data-k="C">✕</button>
+        <button class="pin-key" data-k="0">0</button>
+        <button class="pin-key back-btn" data-k="B">⌫</button>
+      </div>
+      <div class="pin-error" id="pin-error"></div>
+      <div class="pin-hint">Default PIN: 1234</div>
+    </div>
+  </div>
+
+  <!-- ── Parent panel modal ────────────────────────────────── -->
+  <div class="modal-overlay" id="parent-modal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <h2>⚙️ Parent Settings</h2>
+
+      <div class="panel-section">
+        <div class="panel-section-title">Today</div>
+        <button class="panel-btn success" id="btn-unskip" style="display:none">
+          <span class="btn-icon">✅</span> Un-skip today
+        </button>
+        <button class="panel-btn danger" id="btn-skip">
+          <span class="btn-icon">⏭️</span> Skip today (holiday / sick day)
+        </button>
+        <button class="panel-btn danger" id="btn-reset-day">
+          <span class="btn-icon">🔄</span> Reset today's tasks
+        </button>
+      </div>
+
+      <div class="panel-section">
+        <div class="panel-section-title">Tasks</div>
+        <div class="task-edit-list" id="task-edit-list"></div>
+        <div class="add-task-row">
+          <input class="add-task-input" id="new-task-input" placeholder="New task (start with emoji!)" />
+          <button class="add-task-submit" id="add-task-btn">Add</button>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <div class="panel-section-title">Stars</div>
+        <div class="stat-row">
+          Total stars earned <span class="stat-value" id="total-stars-stat">⭐ 0</span>
+        </div>
+        <button class="panel-btn danger" id="btn-reset-stars">
+          <span class="btn-icon">💫</span> Reset star total
+        </button>
+      </div>
+
+      <div class="panel-section">
+        <div class="panel-section-title">Security</div>
+        <button class="panel-btn" id="btn-change-pin">
+          <span class="btn-icon">🔐</span> Change PIN
+        </button>
+      </div>
+
+      <button class="close-panel-btn" id="close-parent-btn">Done ✓</button>
+    </div>
+  </div>
+
+  <!-- ── Change PIN modal ───────────────────────────────────── -->
+  <div class="change-pin-modal" id="change-pin-modal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="change-pin-step active" id="cp-step1">
+        <h2>Enter New PIN</h2>
+        <div class="pin-dots">
+          <div class="pin-dot" id="cp-d0"></div>
+          <div class="pin-dot" id="cp-d1"></div>
+          <div class="pin-dot" id="cp-d2"></div>
+          <div class="pin-dot" id="cp-d3"></div>
+        </div>
+        <div class="pin-keypad" id="cp-keypad1"></div>
+        <div class="pin-error" id="cp-error1"></div>
+      </div>
+      <div class="change-pin-step" id="cp-step2">
+        <h2>Confirm New PIN</h2>
+        <div class="pin-dots">
+          <div class="pin-dot" id="cp-c0"></div>
+          <div class="pin-dot" id="cp-c1"></div>
+          <div class="pin-dot" id="cp-c2"></div>
+          <div class="pin-dot" id="cp-c3"></div>
+        </div>
+        <div class="pin-keypad" id="cp-keypad2"></div>
+        <div class="pin-error" id="cp-error2"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (() => {
+    // ── Constants ───────────────────────────────────────────
+    const TASK_COLORS = [
+      '#FF6B9D','#FF9E3D','#4CAF50','#2196F3','#9C27B0',
+      '#E91E63','#FF5722','#00BCD4','#8BC34A','#FF4081',
+      '#7C4DFF','#00ACC1','#FF6E40','#43A047','#AB47BC',
+    ];
+
+    const MOTIVATION = [
+      [0,  0,  'Time to get started! 💪'],
+      [1,  3,  'Great start! Keep going! 🌟'],
+      [4,  6,  'You\'re doing brilliantly! ⭐'],
+      [7,  9,  'More than halfway — amazing! 🚀'],
+      [10, 12, 'Nearly there! Just a bit more! 🎯'],
+      [13, 13, 'One more! Almost done! 🔥'],
+      [14, 99, 'All done! You\'re a superstar! 🎉'],
+    ];
+
+    const DEFAULT_TASKS = [
+      { id:1,  emoji:'🌅', name:'Wake up' },
+      { id:2,  emoji:'🚽', name:'Have a wee' },
+      { id:3,  emoji:'🐹', name:'Feed Furry' },
+      { id:4,  emoji:'🛏️', name:'Make bed' },
+      { id:5,  emoji:'🧸', name:'Put teddies on bed' },
+      { id:6,  emoji:'🥣', name:'Have breakfast' },
+      { id:7,  emoji:'🦷', name:'Brush teeth' },
+      { id:8,  emoji:'🧦', name:'Get knickers & socks' },
+      { id:9,  emoji:'👗', name:'Get dressed' },
+      { id:10, emoji:'💇', name:'Brush hair' },
+      { id:11, emoji:'😴', name:'Put PJs on bed' },
+      { id:12, emoji:'🎒', name:'Get bags ready' },
+      { id:13, emoji:'👟', name:'Shoes on' },
+      { id:14, emoji:'🧥', name:'Coat on' },
+    ];
+
+    // ── State ────────────────────────────────────────────────
+    let tasks        = [];
+    let totalStars   = 0;
+    let skippedDays  = [];
+    let parentPin    = '1234';
+
+    // ── Storage helpers ──────────────────────────────────────
+    function load() {
+      const t = localStorage.getItem('ella_tasks');
+      tasks = t ? JSON.parse(t) : DEFAULT_TASKS.map(d => ({...d, completed:false}));
+      totalStars  = parseInt(localStorage.getItem('ella_stars') || '0');
+      skippedDays = JSON.parse(localStorage.getItem('ella_skipped') || '[]');
+      parentPin   = localStorage.getItem('ella_pin') || '1234';
+    }
+
+    function save() {
+      localStorage.setItem('ella_tasks',   JSON.stringify(tasks));
+      localStorage.setItem('ella_stars',   String(totalStars));
+      localStorage.setItem('ella_skipped', JSON.stringify(skippedDays));
+      localStorage.setItem('ella_pin',     parentPin);
+    }
+
+    // ── Date helpers ─────────────────────────────────────────
+    function todayStr() {
+      const d = new Date();
+      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+    }
+
+    function pad(n) { return String(n).padStart(2,'0'); }
+
+    function ordinal(n) {
+      const s = ['th','st','nd','rd'], v = n % 100;
+      return n + (s[(v-20)%10] || s[v] || s[0]);
+    }
+
+    function isWeekend() {
+      const d = new Date().getDay();
+      return d === 0 || d === 6;
+    }
+
+    function isSkipped() { return skippedDays.includes(todayStr()); }
+
+    // ── Daily reset ──────────────────────────────────────────
+    function checkReset() {
+      const key  = 'ella_last_reset';
+      const last = localStorage.getItem(key);
+      const today = todayStr();
+      if (last !== today) {
+        tasks = tasks.map(t => ({...t, completed:false}));
+        localStorage.setItem(key, today);
+        save();
+      }
+    }
+
+    // ── Date display ─────────────────────────────────────────
+    function updateDate() {
+      const d = new Date();
+      const DAYS   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      const MONTHS = ['January','February','March','April','May','June','July',
+                      'August','September','October','November','December'];
+      document.getElementById('day-display').textContent  = DAYS[d.getDay()];
+      document.getElementById('date-display').textContent =
+        `${ordinal(d.getDate())} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+    }
+
+    // ── Render ───────────────────────────────────────────────
+    function render() {
+      const main    = document.getElementById('main-content');
+      const weekend = document.getElementById('weekend-screen');
+      const skipped = document.getElementById('skipped-screen');
+
+      weekend.classList.remove('active');
+      skipped.classList.remove('active');
+      main.style.display = 'none';
+
+      if (isWeekend())  { weekend.classList.add('active'); return; }
+      if (isSkipped())  { skipped.classList.add('active'); return; }
+
+      main.style.display = 'flex';
+      renderTasks();
+      updateProgress();
+      updateStars();
+    }
+
+    function renderTasks() {
+      const list = document.getElementById('task-list');
+      list.innerHTML = '';
+      tasks.forEach((task, i) => {
+        const color = TASK_COLORS[i % TASK_COLORS.length];
+        const el = document.createElement('div');
+        el.className = 'task-card' + (task.completed ? ' completed' : '');
+        el.style.cssText = `--tc:${color}`;
+        el.dataset.id = task.id;
+        el.innerHTML = `
+          <div class="task-emoji">${task.emoji}</div>
+          <div class="task-name">${escHtml(task.name)}</div>
+          <div class="task-check">${task.completed ? '✓' : ''}</div>
+        `;
+        el.addEventListener('click', () => toggleTask(task.id, el));
+        list.appendChild(el);
+      });
+    }
+
+    function escHtml(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function updateProgress() {
+      const done  = tasks.filter(t => t.completed).length;
+      const total = tasks.length;
+      const pct   = total > 0 ? (done / total * 100) : 0;
+
+      document.getElementById('progress-bar').style.width = pct + '%';
+      document.getElementById('progress-text').textContent = `${done}/${total}`;
+
+      const bar = document.getElementById('progress-bar');
+      if (pct === 100) {
+        bar.style.background = 'linear-gradient(90deg, #4CAF50, #8BC34A)';
+      } else if (pct >= 50) {
+        bar.style.background = 'linear-gradient(90deg, #FF9800, #FFC107)';
+      } else {
+        bar.style.background = 'linear-gradient(90deg, #2196F3, #03A9F4)';
+      }
+
+      const msg = document.getElementById('motivation-msg');
+      const m = MOTIVATION.find(([lo,hi]) => done >= lo && done <= hi);
+      msg.textContent = m ? m[2] : '';
+    }
+
+    function updateStars() {
+      const done = tasks.filter(t => t.completed).length;
+      document.getElementById('today-stars').textContent  = done;
+      document.getElementById('total-stars-badge').textContent = `⭐ ${totalStars}`;
+    }
+
+    // ── Toggle task ──────────────────────────────────────────
+    function toggleTask(id, el) {
+      const task = tasks.find(t => t.id === id);
+      if (!task) return;
+
+      task.completed = !task.completed;
+
+      if (task.completed) {
+        totalStars++;
+        el.classList.add('completed', 'pop');
+        el.querySelector('.task-check').textContent = '✓';
+        el.addEventListener('animationend', () => el.classList.remove('pop'), {once:true});
+        playTing();
+        burstConfetti(el);
+      } else {
+        totalStars = Math.max(0, totalStars - 1);
+        el.classList.remove('completed');
+        el.querySelector('.task-check').textContent = '';
+      }
+
+      save();
+      updateProgress();
+      updateStars();
+
+      if (tasks.length > 0 && tasks.every(t => t.completed)) {
+        setTimeout(showCelebration, 700);
+      }
+    }
+
+    // ── Confetti ─────────────────────────────────────────────
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx    = canvas.getContext('2d');
+    let   parts  = [];
+    let   rafId  = null;
+
+    const COLS = ['#FF6B9D','#FF9E3D','#4CAF50','#2196F3','#9C27B0','#FFE566','#FF5722','#00BCD4'];
+
+    function resizeCanvas() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    function mkPart(x, y, big) {
+      return {
+        x, y,
+        vx: (Math.random() - 0.5) * (big ? 14 : 9),
+        vy: -Math.random() * (big ? 12 : 8) - 2,
+        col: COLS[Math.random() * COLS.length | 0],
+        sz:  Math.random() * (big ? 14 : 9) + (big ? 5 : 3),
+        rot: Math.random() * 360,
+        rs:  (Math.random() - 0.5) * 12,
+        a:   1,
+        sq:  Math.random() > 0.5,
+      };
+    }
+
+    function burstConfetti(el) {
+      const r = el.getBoundingClientRect();
+      const x = r.left + r.width  / 2;
+      const y = r.top  + r.height / 2;
+      for (let i = 0; i < 28; i++) parts.push(mkPart(x, y, false));
+      if (!rafId) loop();
+    }
+
+    function bigConfetti() {
+      for (let i = 0; i < 220; i++) {
+        parts.push(mkPart(
+          Math.random() * window.innerWidth,
+          Math.random() * window.innerHeight * 0.4,
+          true
+        ));
+      }
+      if (!rafId) loop();
+    }
+
+    function loop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      parts = parts.filter(p => p.a > 0.02);
+
+      for (const p of parts) {
+        p.x  += p.vx;
+        p.vy += 0.32;
+        p.y  += p.vy;
+        p.rot += p.rs;
+        p.a  -= 0.013;
+
+        ctx.save();
+        ctx.globalAlpha = p.a;
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot * Math.PI / 180);
+        ctx.fillStyle = p.col;
+        if (p.sq) ctx.fillRect(-p.sz/2, -p.sz/4, p.sz, p.sz/2);
+        else { ctx.beginPath(); ctx.arc(0, 0, p.sz/2, 0, Math.PI*2); ctx.fill(); }
+        ctx.restore();
+      }
+
+      if (parts.length > 0) {
+        rafId = requestAnimationFrame(loop);
+      } else {
+        rafId = null;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    // ── Audio ────────────────────────────────────────────────
+    let ac = null;
+
+    function getAC() {
+      if (!ac) {
+        try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
+      }
+      return ac;
+    }
+
+    function tone(freq, dur, vol=0.28, type='sine') {
+      const a = getAC();
+      if (!a) return;
+      try {
+        const o = a.createOscillator(), g = a.createGain();
+        o.connect(g); g.connect(a.destination);
+        o.type = type; o.frequency.value = freq;
+        g.gain.setValueAtTime(vol, a.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, a.currentTime + dur);
+        o.start(); o.stop(a.currentTime + dur);
+      } catch(e) {}
+    }
+
+    function playTing() {
+      tone(880, 0.25);
+      setTimeout(() => tone(1320, 0.18, 0.18), 70);
+    }
+
+    function playFanfare() {
+      [[523,0],[659,160],[784,320],[1047,480],[1319,640]].forEach(([f,d]) =>
+        setTimeout(() => tone(f, 0.45, 0.3), d));
+    }
+
+    // ── Celebration ──────────────────────────────────────────
+    function showCelebration() {
+      const n = tasks.length;
+      document.getElementById('cel-stars').textContent = `You earned ⭐ ${n} stars today!`;
+      document.getElementById('celebration-overlay').classList.add('active');
+      bigConfetti();
+      playFanfare();
+    }
+
+    document.getElementById('dismiss-btn').addEventListener('click', () => {
+      document.getElementById('celebration-overlay').classList.remove('active');
+    });
+
+    // ── PIN modal ─────────────────────────────────────────────
+    let pinBuf = '';
+
+    function openPin() {
+      pinBuf = '';
+      updatePinDots();
+      document.getElementById('pin-error').textContent = '';
+      document.getElementById('pin-modal').classList.add('active');
+    }
+
+    function updatePinDots() {
+      for (let i = 0; i < 4; i++) {
+        document.getElementById(`d${i}`).classList.toggle('filled', i < pinBuf.length);
+      }
+    }
+
+    document.querySelectorAll('.pin-key').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const k = btn.dataset.k;
+        if      (k === 'C')                 pinBuf = '';
+        else if (k === 'B')                 pinBuf = pinBuf.slice(0, -1);
+        else if (pinBuf.length < 4)         pinBuf += k;
+        updatePinDots();
+
+        if (pinBuf.length === 4) {
+          if (pinBuf === parentPin) {
+            document.getElementById('pin-modal').classList.remove('active');
+            pinBuf = '';
+            openParentPanel();
+          } else {
+            document.getElementById('pin-error').textContent = 'Wrong PIN — try again! 🙅';
+            pinBuf = '';
+            setTimeout(() => {
+              updatePinDots();
+              document.getElementById('pin-error').textContent = '';
+            }, 900);
+          }
+        }
+      });
+    });
+
+    document.getElementById('settings-btn').addEventListener('click', openPin);
+
+    // Tap outside PIN modal to dismiss
+    document.getElementById('pin-modal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('pin-modal')) {
+        document.getElementById('pin-modal').classList.remove('active');
+      }
+    });
+
+    // ── Parent panel ──────────────────────────────────────────
+    function openParentPanel() {
+      const skp = isSkipped();
+      document.getElementById('btn-skip').style.display   = skp ? 'none'  : 'flex';
+      document.getElementById('btn-unskip').style.display = skp ? 'flex'  : 'none';
+      document.getElementById('total-stars-stat').textContent = `⭐ ${totalStars}`;
+      renderEditList();
+      document.getElementById('parent-modal').classList.add('active');
+    }
+
+    document.getElementById('close-parent-btn').addEventListener('click', () => {
+      document.getElementById('parent-modal').classList.remove('active');
+      render();
+    });
+
+    document.getElementById('parent-modal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('parent-modal')) {
+        document.getElementById('parent-modal').classList.remove('active');
+        render();
+      }
+    });
+
+    document.getElementById('btn-skip').addEventListener('click', () => {
+      skippedDays.push(todayStr());
+      save();
+      document.getElementById('parent-modal').classList.remove('active');
+      render();
+    });
+
+    document.getElementById('btn-unskip').addEventListener('click', () => {
+      skippedDays = skippedDays.filter(d => d !== todayStr());
+      save();
+      document.getElementById('parent-modal').classList.remove('active');
+      render();
+    });
+
+    document.getElementById('btn-reset-day').addEventListener('click', () => {
+      if (!confirm('Reset all tasks for today?')) return;
+      tasks = tasks.map(t => ({...t, completed:false}));
+      save();
+      document.getElementById('parent-modal').classList.remove('active');
+      render();
+    });
+
+    document.getElementById('btn-reset-stars').addEventListener('click', () => {
+      if (!confirm('Reset total star count to zero?')) return;
+      totalStars = 0;
+      save();
+      document.getElementById('total-stars-stat').textContent = '⭐ 0';
+      document.getElementById('total-stars-badge').textContent = '⭐ 0';
+    });
+
+    document.getElementById('btn-change-pin').addEventListener('click', openChangePin);
+
+    // ── Edit task list ────────────────────────────────────────
+    function renderEditList() {
+      const list = document.getElementById('task-edit-list');
+      list.innerHTML = '';
+      tasks.forEach(task => {
+        const row = document.createElement('div');
+        row.className = 'task-edit-row';
+        row.innerHTML = `
+          <div class="edit-emoji">${task.emoji}</div>
+          <input class="edit-name-input" value="${escHtml(task.name)}" data-id="${task.id}" />
+          <button class="delete-task-btn" data-id="${task.id}">🗑️</button>
+        `;
+        list.appendChild(row);
+
+        row.querySelector('input').addEventListener('blur', e => {
+          const t = tasks.find(t => t.id === task.id);
+          if (t && e.target.value.trim()) { t.name = e.target.value.trim(); save(); }
+        });
+
+        row.querySelector('.delete-task-btn').addEventListener('click', () => {
+          if (tasks.length <= 1) { alert("Can't delete the last task!"); return; }
+          tasks = tasks.filter(t => t.id !== task.id);
+          save();
+          renderEditList();
+        });
+      });
+    }
+
+    function parseNewTask(raw) {
+      const text = raw.trim();
+      if (!text) return null;
+      // Extract leading emoji if present
+      const m = text.match(/^(\p{Emoji_Presentation}|\p{Extended_Pictographic})\s*/u);
+      if (m) {
+        return { emoji: m[0].trim(), name: text.slice(m[0].length).trim() || text };
+      }
+      return { emoji: '✨', name: text };
+    }
+
+    document.getElementById('add-task-btn').addEventListener('click', () => {
+      const input = document.getElementById('new-task-input');
+      const parsed = parseNewTask(input.value);
+      if (!parsed) return;
+      const newId = Math.max(0, ...tasks.map(t => t.id)) + 1;
+      tasks.push({ id: newId, ...parsed, completed: false });
+      save();
+      input.value = '';
+      renderEditList();
+    });
+
+    document.getElementById('new-task-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('add-task-btn').click();
+    });
+
+    // ── Change PIN ────────────────────────────────────────────
+    let cpBuf1 = '', cpBuf2 = '';
+
+    function buildKeypad(containerId, bufRef, dotIds, errorId, onFull) {
+      const el = document.getElementById(containerId);
+      el.innerHTML = '';
+      const keys = [['1','2','3'],['4','5','6'],['7','8','9'],['C','0','B']];
+      keys.flat().forEach(k => {
+        const btn = document.createElement('button');
+        btn.className = 'pin-key' + (k==='C' ? ' clear-btn' : k==='B' ? ' back-btn' : '');
+        btn.textContent = k === 'C' ? '✕' : k === 'B' ? '⌫' : k;
+        btn.addEventListener('click', () => {
+          if      (k === 'C') bufRef.val = '';
+          else if (k === 'B') bufRef.val = bufRef.val.slice(0,-1);
+          else if (bufRef.val.length < 4) bufRef.val += k;
+          // update dots
+          dotIds.forEach((id,i) =>
+            document.getElementById(id).classList.toggle('filled', i < bufRef.val.length));
+          document.getElementById(errorId).textContent = '';
+          if (bufRef.val.length === 4) onFull(bufRef.val);
+        });
+        el.appendChild(btn);
+      });
+    }
+
+    function openChangePin() {
+      cpBuf1 = ''; cpBuf2 = '';
+      const b1 = {val:''}, b2 = {val:''};
+
+      buildKeypad('cp-keypad1', b1, ['cp-d0','cp-d1','cp-d2','cp-d3'], 'cp-error1', (v) => {
+        cpBuf1 = v;
+        ['cp-d0','cp-d1','cp-d2','cp-d3'].forEach(id =>
+          document.getElementById(id).classList.remove('filled'));
+        document.getElementById('cp-step1').classList.remove('active');
+        document.getElementById('cp-step2').classList.add('active');
+      });
+
+      buildKeypad('cp-keypad2', b2, ['cp-c0','cp-c1','cp-c2','cp-c3'], 'cp-error2', (v) => {
+        if (v === cpBuf1) {
+          parentPin = v;
+          save();
+          document.getElementById('change-pin-modal').classList.remove('active');
+          alert('PIN updated! ✅');
+        } else {
+          document.getElementById('cp-error2').textContent = 'PINs don\'t match — try again!';
+          b2.val = '';
+          ['cp-c0','cp-c1','cp-c2','cp-c3'].forEach(id =>
+            document.getElementById(id).classList.remove('filled'));
+        }
+      });
+
+      ['cp-d0','cp-d1','cp-d2','cp-d3',
+       'cp-c0','cp-c1','cp-c2','cp-c3'].forEach(id =>
+        document.getElementById(id).classList.remove('filled'));
+
+      document.getElementById('cp-step1').classList.add('active');
+      document.getElementById('cp-step2').classList.remove('active');
+      document.getElementById('cp-error1').textContent = '';
+      document.getElementById('cp-error2').textContent = '';
+      document.getElementById('change-pin-modal').classList.add('active');
+    }
+
+    document.getElementById('change-pin-modal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('change-pin-modal')) {
+        document.getElementById('change-pin-modal').classList.remove('active');
+      }
+    });
+
+    // ── Auto-refresh at midnight ──────────────────────────────
+    function scheduleMidnight() {
+      const now = new Date();
+      const ms  = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1) - now + 1000;
+      setTimeout(() => { checkReset(); updateDate(); render(); scheduleMidnight(); }, ms);
+    }
+
+    // ── Boot ──────────────────────────────────────────────────
+    load();
+    checkReset();
+    updateDate();
+    render();
+    scheduleMidnight();
+
+  })();
+  </script>
+</body>
+</html>
