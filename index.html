@@ -94,6 +94,32 @@
 
     .settings-btn:active { background: rgba(255,255,255,0.4); }
 
+    /* ── PE Day Banner ───────────────────────────────────────── */
+    .pe-banner {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 20px;
+      font-size: clamp(0.95rem, 2.8vw, 1.15rem);
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .pe-banner.pe-day {
+      display: flex;
+      background: linear-gradient(90deg, #FF9E3D, #FF6B35);
+      color: white;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+    }
+
+    .pe-banner.normal-day {
+      display: flex;
+      background: linear-gradient(90deg, #4CAF50, #66BB6A);
+      color: white;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+    }
+
     /* ── Progress section ───────────────────────────────────── */
     .progress-section {
       padding: 14px 20px 8px;
@@ -620,6 +646,9 @@
     <button class="settings-btn" id="settings-btn" aria-label="Parent Settings">⚙️</button>
   </header>
 
+  <!-- ── PE Day Banner ──────────────────────────────────────── -->
+  <div class="pe-banner" id="pe-banner"></div>
+
   <!-- ── Weekend screen ────────────────────────────────────── -->
   <div class="offday-screen" id="weekend-screen">
     <div class="offday-emoji">🌈</div>
@@ -800,6 +829,25 @@
       { id:14, emoji:'🧥', name:'Coat on' },
     ];
 
+    // ── PE Day detection ─────────────────────────────────────
+    // Tuesday = 2, Friday = 5
+    function isPeDay() {
+      const d = new Date().getDay();
+      return d === 2 || d === 5;
+    }
+
+    // Returns tasks with task id=9 swapped for PE vs normal day
+    function getTasksForToday(baseTasks) {
+      return baseTasks.map(t => {
+        if (t.id === 9) {
+          return isPeDay()
+            ? { ...t, emoji: '🏃', name: 'Put on PE kit' }
+            : { ...t, emoji: '👗', name: 'Put on uniform' };
+        }
+        return t;
+      });
+    }
+
     // ── State ────────────────────────────────────────────────
     let tasks        = [];
     let totalStars   = 0;
@@ -865,6 +913,23 @@
         `${ordinal(d.getDate())} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
     }
 
+    // ── PE Banner ────────────────────────────────────────────
+    function updatePeBanner() {
+      const banner = document.getElementById('pe-banner');
+      if (isWeekend() || isSkipped()) {
+        banner.className = 'pe-banner';
+        banner.textContent = '';
+        return;
+      }
+      if (isPeDay()) {
+        banner.className = 'pe-banner pe-day';
+        banner.textContent = '🏃 It\'s PE day — wear your PE kit!';
+      } else {
+        banner.className = 'pe-banner normal-day';
+        banner.textContent = '👕 Normal school day — wear your uniform';
+      }
+    }
+
     // ── Render ───────────────────────────────────────────────
     function render() {
       const main    = document.getElementById('main-content');
@@ -875,9 +940,12 @@
       skipped.classList.remove('active');
       main.style.display = 'none';
 
+      updatePeBanner();
+
       if (isWeekend())  { weekend.classList.add('active'); return; }
       if (isSkipped())  { skipped.classList.add('active'); return; }
 
+      tasks = getTasksForToday(tasks);
       main.style.display = 'flex';
       renderTasks();
       updateProgress();
